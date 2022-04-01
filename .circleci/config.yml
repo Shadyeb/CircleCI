@@ -25,14 +25,10 @@ jobs:
           command: |
             sudo apt-get update;
             sudo apt-get install lftp;
-      - run:
-          name: check dir
-          command: |
-            sudo pwd
             
-      # - run:
-      #     name: Sending my Dist via ftp
-      #     command: lftp sftp://${username}:${password}@${hostname} -e "set ftp:ssl-allow true; set ftp:ssl-force true; set ftp:ssl-protect-data true; mirror -nR dist / ; exit"
+      - run:
+          name: Sending my Dist via ftp
+          command: lftp sftp://${username}:${password}@${hostname} -e "set ftp:ssl-allow true; set ftp:ssl-force true; set ftp:ssl-protect-data true; mirror -nR /home/circleci/project/dist / ; exit"
 workflows:
   build_deploy:
     jobs:
