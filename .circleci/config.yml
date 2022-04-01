@@ -1,17 +1,28 @@
 version: 2.1
-
-workflows:
-  test-env-vars:
-    jobs:
-      - build
-
 jobs:
-  build:
+  deploy:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/node:16.10
     steps:
       - checkout
+      - restore_cache:
+           keys:
+            - v1-dep-{{ checksum "package.json" }}
+            - v1-dep-
       - run:
-          name: "echo an env var that is part of our project"
-          command: |
-            echo $MY_NAME
+          name: Install Dep
+          command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dep-{{ checksum "package.json" }}
+      - run:
+          name: Run Test
+          command: npm run test
+      - run:
+          name: Run Build
+          command: npm run build
+workflows:
+  build_deploy:
+    jobs:
+      - deploy 
