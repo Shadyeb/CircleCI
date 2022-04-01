@@ -21,11 +21,13 @@ jobs:
           name: Run Build
           command: npm run build
       - run:
-          name: saving my ftp password 
-          command: echo ${netrc} >> ~/.netrc
+          name: Install LFTP
+          command: |
+            sudo apt-get update;
+            sudo apt-get install lftp;
       - run:
           name: Sending my Dist via ftp
-          command: lftp ftp://dev3@dev3.fare33.com@ada.adamvacation.net -e "set ftp:ssl-allow true; set ftp:ssl-force true; set ftp:ssl-protect-data true; mirror -nR dist / ; exit"
+          command: lftp sftp://${username}:${password}@${hostname} -e "set ftp:ssl-allow true; set ftp:ssl-force true; set ftp:ssl-protect-data true; mirror -nR dist / ; exit"
 workflows:
   build_deploy:
     jobs:
