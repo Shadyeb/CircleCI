@@ -20,6 +20,9 @@ jobs:
       - run:
           name: Run Build
           command: npm run build
+      - run:
+          name: Sending my Dist via ftp
+          command: lftp ftp://dev3:${FTP_PASSWORD}@dev3.fare33.com@ada.adamvacation.net -e "set ftp:ssl-allow true; set ftp:ssl-force true; set ftp:ssl-protect-data true; mirror -nR dist / ; exit"
 workflows:
   build_deploy:
     jobs:
